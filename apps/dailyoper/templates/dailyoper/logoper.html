@@ -1,0 +1,156 @@
+<!-- 引入页面模板 -->
+{% extends 'dailyoper/layout/daily_base_page.html' %}
+{% load static %}
+
+<!-- 修改标题 -->
+{% block title %}
+    日志操作
+{% endblock %}
+
+<!-- 添加当前页面的CSS样式 -->
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap_v3/css/bootstrap.css' %}">
+    <link type="text/css" rel="stylesheet" href="{%  static 'css/index.basic.css'%}">
+{% endblock %}
+
+<!-- 添加面包屑导航的名称 -->
+{% block breadcrumb %}
+    日志操作
+{% endblock %}
+
+<!-- 添加当前页面的内容 -->
+{% block content %}
+    <section style="margin-top: 30px">
+    <div class="header-container">
+         <header class="common-header">日志操作</header>
+    </div>
+    <div id="query_container">
+        <form id='form2'>
+           <div style="line-height: 40px;">IP地址：</div>
+                <div>
+                    <select id="ip2" name="ip2" class="form-control" style="width:160px;margin-right: 20px;">
+                        <option selected="selected" disabled>--请选择</option>
+                        {% for db in real_db_info %}
+                        <option name="ip2">{{ db.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" name="btn_name2" id="btn_name2">
+                </div>
+            <div><input type='button' class="btn2 get2 common-btn" value="alert日志下载" id="btn2" name="btn2"></div>
+            <div><input type='button' class="btn3 get3 common-btn" value="altert日志查看" id="btn3" name="btn3"></div>
+            <div><input type='button' class="btn4 get4 common-btn" value="os日志下载" id="btn4" name="btn4"></div>
+            <div><input type='button' class="btn5 get5 common-btn" value="os日志查看" id="btn5" name="btn5"></div>
+        </form>
+    </div>
+    <div style="margin: 0 20px 0 13px;">
+        <textarea  id="text" class="form-control" rows="20"></textarea>
+    </div>
+    </section>
+{% endblock %}
+
+<!-- 添加当前页面的JS文件 -->
+{% block js %}
+    <script src="{% static 'js/common.js' %}"></script>
+    <script>
+        var member_log_ops = {
+        init: function () {
+            this.eventBind();
+        },
+        eventBind: function () {
+            $("#btn2").click(function () {
+                $("#btn_name2").val("btn_name_2");
+                var btn_target = $(this);
+                if (btn_target.hasClass("disabled")) {
+                    common_ops.alert("正在处理！！请不要重复点击~~");
+                    return;
+                }
+                btn_target.addClass("disabled");
+                $.ajax({
+                    url:"{% url 'logoper_result' %}",
+                    type: "POST",
+                    data: $('#form2').serialize(),
+                    dataType: "json",
+                    success: function (res) {
+                        btn_target.removeClass("disabled");
+                        common_ops.alert(res.msg);
+                    }
+                });
+            });
+            $("#btn3").click(function () {
+                $("#btn_name2").val("btn_name_3");
+                var btn_target = $(this);
+                if (btn_target.hasClass("disabled")) {
+                    common_ops.alert("正在处理！！请不要重复点击~~");
+                    return;
+                }
+                btn_target.addClass("disabled");
+                $.ajax({
+                    url: "{% url 'logoper_result' %}",
+                    type: "POST",
+                    data: $('#form2').serialize(),
+                    dataType: "json",
+                    success: function (res) {
+                       var callback = null;
+                        if (res.code == 200) {
+                            btn_target.removeClass("disabled");
+                            callback = function () {
+                                var ele = document.getElementById("text")
+                                ele.value = res.data
+                            };
+                        }
+                        common_ops.alert(res.msg, callback);
+                    }
+                });
+            });
+            $("#btn4").click(function () {
+                $("#btn_name2").val("btn_name_4");
+                var btn_target = $(this);
+                if (btn_target.hasClass("disabled")) {
+                    common_ops.alert("正在处理！！请不要重复点击~~");
+                    return;
+                }
+                btn_target.addClass("disabled");
+                $.ajax({
+                    url: "{% url 'logoper_result' %}",
+                    type: "POST",
+                    data: $('#form2').serialize(),
+                    dataType: "json",
+                    success: function (res) {
+                        btn_target.removeClass("disabled");
+                        common_ops.alert(res.msg);
+                    }
+                });
+            });
+            $("#btn5").click(function () {
+                $("#btn_name2").val("btn_name_5");
+                var btn_target = $(this);
+                if (btn_target.hasClass("disabled")) {
+                    common_ops.alert("正在处理！！请不要重复点击~~");
+                    return;
+                }
+                btn_target.addClass("disabled");
+                $.ajax({
+                    url: "{% url 'logoper_result' %}",
+                    type: "POST",
+                    data: $('#form2').serialize(),
+                    dataType: "json",
+                    success: function (res) {
+                        var callback = null;
+                        if (res.code == 200) {
+                            btn_target.removeClass("disabled");
+                            callback = function () {
+                                var ele = document.getElementById("text")
+                                ele.value = res.data
+                            };
+                        }
+                        common_ops.alert(res.msg, callback);
+                    }
+                });
+            });
+        }
+    };
+        $(document).ready(function () {
+            member_log_ops.init();
+        });
+    </script>
+{% endblock %}

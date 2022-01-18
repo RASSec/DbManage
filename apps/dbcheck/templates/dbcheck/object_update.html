@@ -1,0 +1,84 @@
+<!-- 引入页面模板 -->
+{% extends 'dbcheck/layout/db_base_page.html' %}
+
+<!-- 修改标题 -->
+{% block title %}
+    对象更新
+{% endblock %}
+
+<!-- 添加当前页面的CSS样式 -->
+{% block css %}
+{% endblock %}
+
+<!-- 添加面包屑导航的名称 -->
+{% block breadcrumb %}
+    对象更新
+{% endblock %}
+
+<!-- 添加当前页面的内容 -->
+{% block content %}
+    <table class="layui-hide" id="tableArea"></table>
+
+{% endblock %}
+
+<!-- 添加当前页面的JS文件 -->
+{% block js %}
+    <script>
+         // 入口函数
+        $(function () {
+            // 初始化表格
+            initTable(ip_str="",time_str="");
+            // 响应按钮点击事件
+            buttonClick();
+        })
+
+        // 初始化表格
+        function initTable(ip_str="",time_str="") {
+            // 使用Layui table插件
+            layui.use('table',function () {
+                // 实例化一个表格对象
+                let table = layui.table;
+
+                // 开始渲染表格
+                table.render({
+                    elem:'#tableArea'
+                    ,url:"{% url 'list_object_update' %}"  // 请求数据的后台接口
+                    ,method:'post'
+                    ,where:{
+                        ipStr:ip_str,
+                        timeStr:time_str,
+                        csrfmiddlewaretoken:"{{ csrf_token }}"
+                    }
+                    ,even:true  // 表格的斑马线效果
+                    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                    ,cols: [[
+                        {field:'IP', title: 'IP地址',sort:true}
+                        ,{field:'COUNT_TAB', title: '更新对象个数', sort: true}
+                        ,{field:'GETTIME', title: '获取时间', sort: true}
+                    ]]
+                    ,page:true  // 启用分页
+                    ,limit:12
+                    ,limits:[15,20,25,30,50,75,100]
+                    ,toolbar:false   // 是否展示顶部工具栏
+                    ,text:'加载数据出现异常，请联系管理员！'  // 加载数据出现异常时的文字展示
+                    ,done:function(res,current,count){
+                        $('thead tr').css({'background-color':'#009688','color':'white'});
+                    }
+                });
+            })
+        }
+
+        // 按钮点击事件
+        function buttonClick(){
+            $('#btnQuery').on('click',function () {
+               let ip_str = $('#ipStr').val();
+               let time_str = $('#timeStr').val();
+               initTable(ip_str=ip_str,time_str=time_str);
+            });
+
+            $('#btnAll').on('click',function () {
+                location.reload();
+            })
+        }
+    </script>
+{% endblock %}

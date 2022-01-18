@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>数据库运维管理平台</title>
+    <!-- 引入LayUI的样式文件 -->
+    <link rel="stylesheet" href="{% static 'plugin/layui/css/layui.css' %}">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!-- 页面的header: 标题、顶部导航、登陆信息 -->
+    <div class="layui-header">
+        <!-- 标题 -->
+        <div class="layui-logo"><b>数据库运维管理平台</b></div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="{% static 'images/1.jpg' %}" class="layui-nav-img" alt="头像">
+                    {{ username }}
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                    <dd><a href="{% url 'login' %}">退出</a></dd>
+                </dl>
+            </li>
+
+        </ul>
+    </div>
+
+    <!-- 页面的侧边栏 -->
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">数据库运维</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="{% url 'faculty' %}" target="rightArea">数据库类型</a></dd>
+                        <dd><a href="{% url 'major' %}" target="rightArea" >数据库列表</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">Oracle数据库巡检</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="{% url 'startup_time' %}" target="rightArea" >启动时间</a></dd>
+                        <dd><a href="{% url 'tbs_used' %}" target="rightArea">表空间使用率</a></dd>
+                        <dd><a href="{% url 'object_update' %}" target="rightArea">更新对象</a></dd>
+                        <dd><a href="{% url 'scheduler_job' %}" target="rightArea">作业调度</a></dd>
+                        <dd><a href="{% url 'db_backup_info' %}" target="rightArea">数据库备份</a></dd>
+                        <dd><a href="{% url 'db_archive_info' %}" target="rightArea">数据库归档</a></dd>
+                        <dd><a href="{% url 'db_performance_info' %}" target="rightArea">性能指标</a></dd>
+                    </dl>
+                </li>
+                 <li class="layui-nav-item">
+                    <a href="javascript:;">Sqlserver数据库巡检</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="{% url 'sqlservercheck' %}" target="rightArea" >sqlserver巡检</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">日常操作</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="{% url 'oswatch' %}" target="rightArea" >OSW文件操作</a></dd>
+                        <dd><a href="{% url 'tbs' %}" target="rightArea" >表空间数据报表</a></dd>
+                        <dd><a href="{% url 'aas' %}" target="rightArea" >AAS数据报表</a></dd>
+                        <dd><a href="{% url 'logoper' %}" target="rightArea" >日志操作</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">数据库工具</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="{% url 'dbinstall' %}" target="rightArea" >oracle单机安装工具</a></dd>
+                        <dd><a href="{% url 'dboper' %}" target="rightArea" >oracle运维工具</a></dd>
+                        <dd><a href="{% url 'dailycheck' %}" target="rightArea" >日报工具</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">用户权限</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">用户管理</a></dd>
+                        <dd><a href="javascript:;">角色管理</a></dd>
+                        <dd><a href="javascript:;">权限分配</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- 主体区域 -->
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <iframe id="rightArea" name="rightArea" frameborder="0" height="700px" width="100%" ></iframe>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="layui-footer" style="text-align: center">
+        <!-- 底部固定区域 -->
+        © 数据库运维管理平台 2022 v1版本 胡晓丹
+    </div>
+</div>
+
+<!-- 引入 LayUI的JS文件 -->
+<script src="{% static 'plugin/layui/layui.js' %}"></script>
+
+<script>
+    //JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
+
+    });
+</script>
+</body>
+</html>

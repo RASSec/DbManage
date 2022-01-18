@@ -1,0 +1,89 @@
+<!-- 引入页面模板 -->
+{% extends 'sqlservercheck/layout/sqlservercheck_base_page.html' %}
+{% load static %}
+
+<!-- 修改标题 -->
+{% block title %}
+    sqlserver巡检
+{% endblock %}
+
+<!-- 添加当前页面的CSS样式 -->
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap_v3/css/bootstrap.css' %}">
+    <link type="text/css" rel="stylesheet" href="{%  static 'css/index.basic.css'%}">
+{% endblock %}
+
+<!-- 添加面包屑导航的名称 -->
+{% block breadcrumb %}
+    sqlserver巡检
+{% endblock %}
+
+<!-- 添加当前页面的内容 -->
+{% block content %}
+    <section style="margin-top: 30px">
+    <div class="header-container">
+         <header class="common-header">sqlserver巡检</header>
+    </div>
+    <ul id="myTab" class="nav nav-tabs">
+	<li class="active">
+		<a href="#home" data-toggle="tab">sqlserver指标巡检</a>
+	</li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+	<div class="tab-pane fade in active" id="home">
+        <div id="query_container">
+             <div>sqlserver巡检:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="sqlserver_btn" type='button' class="btn get" value="开始" style="width:80px;margin-left: 20px;background-color: #428bca;color:#FFF"></div>
+        </div>
+    </div>
+    </div>
+</section>
+{% endblock %}
+
+<!-- 添加当前页面的JS文件 -->
+{% block js %}
+    <script src="{% static 'js/common.js' %}"></script>
+    <script>
+        window.onload = function(){
+        common_ops.changeMenu();
+        function sqlserver_oper(){
+               var btn_target = $(this);
+               if(btn_target.hasClass('disabled')){
+                   common_ops.alert('正在处理！请不要重复点击！');
+                   return ;
+               }
+               btn_target.addClass('disabled');
+               $.ajax({
+                   url:"{% url 'sqlserver_check_result' %}",
+                   type:"POST",
+                   dataType:"json",
+                   data:{},
+                   success:function (res){
+                       btn_target.removeClass('disabled');
+                       var callback = null;
+                       if(res.code == 200){
+                           callback = function (){
+                                var home = document.getElementById('home');
+                                var sqlserver_div = document.getElementById('sqlserver_div');
+                                var new_sqlserver_div = document.createElement('div');
+                                if(sqlserver_div == null){
+                                    new_sqlserver_div.setAttribute('id','sqlserver_div');
+                                    home.appendChild(new_sqlserver_div);
+                                }else{
+                                    sqlserver_div.remove();
+                                    new_sqlserver_div.setAttribute('id','sqlserver_div');
+                                    home.appendChild(new_sqlserver_div);
+                                }
+                                var img = document.createElement('img');
+                                img.setAttribute('src','/static/sqlserver/sqlserver.jpg' + '?tmp=' + Math.random());
+                                new_sqlserver_div.appendChild(img);
+                           };
+                       }
+                       common_ops.alert(res.msg,callback);
+                   }
+               });
+        }
+        var sqlserver_btn = document.getElementById('sqlserver_btn');
+        sqlserver_btn.addEventListener('click',sqlserver_oper,false);
+    };
+    </script>
+{% endblock %}
